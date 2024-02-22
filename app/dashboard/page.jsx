@@ -1,4 +1,3 @@
-import Otherlayout from '../../components/mylayout'
 import React from 'react'
 
 const page = () => {
@@ -9,13 +8,13 @@ const page = () => {
   )
 }
 
-page.getLayout = function getLayout(page){
-    return(
-<Otherlayout>
-        {page}
-    </Otherlayout>
-    )
+// page.getLayout = function getLayout(page){
+//     return(
+// <Otherlayout>
+//         {page}
+//     </Otherlayout>
+//     )
     
-}
+// }
 
 export default page
