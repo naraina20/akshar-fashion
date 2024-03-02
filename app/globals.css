@@ -50,7 +50,7 @@ nav{
   background-color: transparent;color: white !important;
 }
 
-.nav-active{
+.nav-active {
   background-color: white;
   color: black !important;
 }
@@ -68,7 +68,7 @@ nav{
 }
 
 .c-h-card{
-  height: 500px;
+  height: 400px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -126,3 +126,8 @@ a {
     color-scheme: dark;
   }
 }
+
+@media screen {
+  
+}
+

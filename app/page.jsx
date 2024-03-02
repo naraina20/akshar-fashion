@@ -2,8 +2,24 @@
 import Image from "next/image";
 import styles from "./page.module.css";
 import ProductCard from "@/components/ProductCard";
+import { useEffect } from "react";
+
 
 export default function Home() {
+  
+useEffect(async () => {
+  let res = await fetch("http://localhost:3000/api/posts", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  let allPosts = await res.json();
+
+  console.log('allpost ', allPosts)
+
+}, [])
   return (
     <>
     <div className='nav-bg vw-100 vh-100'>

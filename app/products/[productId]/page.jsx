@@ -1,10 +1,14 @@
+import ProductCard from "@/components/ProductCard";
 import React from "react";
 
 const page = () => {
   return (
     <div className="p-5 px-2 my-3 w-100">
       <div className="d-flex flex-column flex-sm-row mb-2 h-75">
-        <div className="border col-md-6 col-sm-12 mb-3 rounded-3" style={{height: '400px'}}>
+        <div
+          className="border col-md-6 col-sm-12 mb-3 rounded-3"
+          style={{ height: "400px" }}
+        >
           <div id="carouselExampleIndicators" className="carousel slide h-100">
             <div className="carousel-indicators h-100">
               <button
@@ -83,7 +87,7 @@ const page = () => {
         <div className="col-md-6 col-sm-12 ps-md-4">
           <div className="border rounded-3 mb-3 p-2">
             <h4 className="text-secondary">Product title</h4>
-            <h2>$345</h2>
+            <h2>&#x20B9;345</h2>
             <div className="my-3">
               <span className="bg-success text-white rounded-3 p-2">3.5</span>
               <span className="ms-2">15 Ratting, 14 Reviews</span>
@@ -110,17 +114,54 @@ const page = () => {
           <p>Sleeves length : Mera Shirt</p>
           <p>Pattern : Mera Shirt</p>
           <p>Sizes : Mera Shirt</p>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente voluptate dicta laborum quas ut accusantium deserunt repellat eum maxime dolores!</p>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente
+            voluptate dicta laborum quas ut accusantium deserunt repellat eum
+            maxime dolores!
+          </p>
         </div>
         <div className="col-sm-12 col-md-6 ps-md-4">
           <h4 className="text-center">Reviews & Rattings</h4>
           <div className="d-flex flex-column">
             <div className="p-3 rounded-3 border">
-                <h4 className="text-secondary d-inline">Mera name</h4>
-                <span className="text-end">5</span>
-                <p className="">Location</p>
-                <b>bhot bdiay h ye t-shirt kharid lo sahab</b>
+              <h4 className="text-secondary d-inline">Mera name</h4>
+              <span className="text-end">5</span>
+              <p className="">Location</p>
+              <b>bhot bdiay h ye t-shirt kharid lo sahab</b>
             </div>
+          </div>
+        </div>
+        <div className="my-3">
+          <h4 className="text-center">People also viewed</h4>
+          <div className="d-flex flex-wrap mx-2 mx-md-3">
+            <a
+              className="text-dark text-decoration-none p-1 my-3 p-md-3 col-6 col-sm-4 col-md-3 overflow-hidden"
+              href="/products/1"
+              style={{ height: "400px" }}
+            > 
+              <ProductCard />
+            </a>
+            <a
+              className="text-dark text-decoration-none p-1 my-3 p-md-3 col-6 col-sm-4 col-md-3 overflow-hidden"
+              href="/products/1"
+              style={{ height: "400px" }}
+            >
+              <ProductCard />
+            </a>
+            <a
+              className="text-dark text-decoration-none p-1 my-3 p-md-3 col-6 col-sm-4 col-md-3 overflow-hidden"
+              href="/products/1"
+              style={{ height: "400px" }}
+            >
+              <ProductCard />
+            </a>
+            <a
+              className="text-dark text-decoration-none p-1 my-3 p-md-3 col-6 col-sm-4 col-md-3 overflow-hidden"
+              href="/products/1"
+              style={{ height: "400px" }}
+            >
+              <ProductCard />
+            </a>
           </div>
         </div>
       </div>
