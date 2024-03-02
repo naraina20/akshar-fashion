@@ -36,8 +36,7 @@ const Navbar = () => {
 
 
   return (
-    <div className='nav-bg vw-100 vh-100'>
-     <nav className={navbar ? 'navbar navbar-expand-lg fixed-top nav-active':'navbar navbar-expand-lg fixed-top'}>
+     <nav className={navbar ? 'navbar navbar-expand-lg fixed-top nav-active':'navbar navbar-expand-lg fixed-top bg-dark bg-opacity-50'}>
       <div className="container m-auto">
         <a className="navbar-brand" href="#" style={navbar ? {color : 'black'} : {color : 'white'}}>
           Navbar
@@ -121,7 +120,6 @@ const Navbar = () => {
     </nav> 
 
     
-    </div>
   )
 }
 
