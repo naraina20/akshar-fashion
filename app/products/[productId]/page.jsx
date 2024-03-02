@@ -2,9 +2,9 @@ import React from "react";
 
 const page = () => {
   return (
-    <div className="p-5 px-2 vh-100 w-100">
+    <div className="p-5 px-2 my-3 w-100">
       <div className="d-flex flex-column flex-sm-row mb-2 h-75">
-        <div className="border col-md-6 col-sm-12 h-75 mb-3 rounded-3">
+        <div className="border col-md-6 col-sm-12 mb-3 rounded-3" style={{height: '400px'}}>
           <div id="carouselExampleIndicators" className="carousel slide h-100">
             <div className="carousel-indicators h-100">
               <button
