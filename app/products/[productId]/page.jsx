@@ -1,7 +1,29 @@
+"use client"
 import ProductCard from "@/components/ProductCard";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const page = () => {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        let res = await fetch("http://localhost:3000/api/products", {
+          method: "GET",
+        });
+
+        let allPosts = await res.json();
+        console.log('allPosts', allPosts);
+        setProducts(allPosts.data)
+      } catch (error) {
+        console.error('Error fetching data', error);
+      }
+    };
+
+    fetchData();
+
+  }, [])
+
   return (
     <div className="p-5 px-2 my-3 w-100">
       <div className="d-flex flex-column flex-sm-row mb-2 h-75">
@@ -131,40 +153,23 @@ const page = () => {
             </div>
           </div>
         </div>
+      </div>
         <div className="my-3">
           <h4 className="text-center">People also viewed</h4>
           <div className="d-flex flex-wrap mx-2 mx-md-3">
-            <a
-              className="text-dark text-decoration-none p-1 my-3 p-md-3 col-6 col-sm-4 col-md-3 overflow-hidden"
-              href="/products/1"
-              style={{ height: "400px" }}
-            > 
-              <ProductCard />
-            </a>
-            <a
-              className="text-dark text-decoration-none p-1 my-3 p-md-3 col-6 col-sm-4 col-md-3 overflow-hidden"
-              href="/products/1"
-              style={{ height: "400px" }}
-            >
-              <ProductCard />
-            </a>
-            <a
-              className="text-dark text-decoration-none p-1 my-3 p-md-3 col-6 col-sm-4 col-md-3 overflow-hidden"
-              href="/products/1"
-              style={{ height: "400px" }}
-            >
-              <ProductCard />
-            </a>
-            <a
-              className="text-dark text-decoration-none p-1 my-3 p-md-3 col-6 col-sm-4 col-md-3 overflow-hidden"
-              href="/products/1"
-              style={{ height: "400px" }}
-            >
-              <ProductCard />
-            </a>
+            {
+              products.map( product=> (
+                <a
+                  className="text-dark text-decoration-none p-1 my-3 p-md-3 col-6 col-sm-4 col-md-3 overflow-hidden"
+                  href={`/products/${product._id}`}
+                  style={{ height: "400px" }}
+                >
+                  <ProductCard product={product}/>
+                </a>
+              ))
+            }
           </div>
         </div>
-      </div>
     </div>
   );
 };
