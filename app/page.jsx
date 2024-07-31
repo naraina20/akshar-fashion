@@ -11,7 +11,7 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        let res = await fetch("http://localhost:3000/api/products", {
+        let res = await fetch("https://lp19nf4c-3000.inc1.devtunnels.ms/api/products", {
           method: "GET",
         });
 
