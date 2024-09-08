@@ -1,8 +1,17 @@
-"use client";
+"use client"; // Ensure this is a client-side component
+
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation"; // Correct import
 
 const Navbar = () => {
   const [navbar, setNavbar] = useState(false);
+  const [isNavOpen, setIsNavOpen] = useState(false);
+  const router = useRouter();
+
+  const handleLinkClick = () => {
+    setIsNavOpen(false);
+  };
 
   const changeBackgroundColor = () => {
     if (window.scrollY >= 80) {
@@ -10,23 +19,23 @@ const Navbar = () => {
     } else {
       setNavbar(false);
     }
-
-    // console.log(window.scrollY)
   };
 
-  function show() {
-    let element = document.getElementById("navbarSupportedContent");
-    console.log(element, "mera element");
-    if (element.classList.contains("show")) {
-      setNavbar(true);
-    } else {
-      setNavbar(false);
-    }
-  }
-
   useEffect(() => {
+    const handleRouteChange = () => {
+      setIsNavOpen(false);
+    };
+
+    // Listen for route changes
+    router.events?.on("routeChangeStart", handleRouteChange);
+
     window.addEventListener("scroll", changeBackgroundColor);
-  }, []);
+
+    return () => {
+      router.events?.off("routeChangeStart", handleRouteChange);
+      window.removeEventListener("scroll", changeBackgroundColor);
+    };
+  }, [router]);
 
   return (
     <nav
@@ -37,13 +46,9 @@ const Navbar = () => {
       }
     >
       <div className="container m-auto">
-        <a
-          className="navbar-brand"
-          href="#"
-          style={navbar ? { color: "black" } : { color: "white" }}
-        >
+        <Link href="/" className="navbar-brand" style={navbar ? { color: "black" } : { color: "white" }}>
           Navbar
-        </a>
+        </Link>
         <button
           className={
             navbar
@@ -54,9 +59,9 @@ const Navbar = () => {
           data-bs-toggle="collapse"
           data-bs-target="#navbarSupportedContent"
           aria-controls="navbarSupportedContent"
-          aria-expanded="false"
+          aria-expanded={isNavOpen}
           aria-label="Toggle navigation"
-          onClick={() => setTimeout(() => show(), 400)}
+          onClick={() => setIsNavOpen(!isNavOpen)}
         >
           <span
             className={
@@ -65,81 +70,52 @@ const Navbar = () => {
                 : "navbar-toggler-icon navbar-dark"
             }
           ></span>
-          {/* <b><i className="bi bi-list" style={navbar ? {color : 'black'} : {color : 'black'}}></i></b> */}
         </button>
         <div
-          className="collapse navbar-collapse justify-content-between"
+          className={`collapse navbar-collapse justify-content-between ${isNavOpen ? "show" : ""}`}
           id="navbarSupportedContent"
         >
           <div className="d-flex flex-column flex-md-row w-100 justify-content-between">
             <ul className="navbar-nav mb-2 mb-lg-0">
               <li className="nav-item">
-                <a
-                  className="nav-link active"
-                  aria-current="page"
-                  href="/"
-                  style={navbar ? { color: "black" } : { color: "white" }}
-                >
+                <Link href="/" className="nav-link active" aria-current="page" style={navbar ? { color: "black" } : { color: "white" }} onClick={handleLinkClick}>
                   Home
-                </a>
+                </Link>
               </li>
               <li className="nav-item">
-                <a
-                  className="nav-link"
-                  href="/products"
-                  style={navbar ? { color: "black" } : { color: "white" }}
-                >
+                <Link href="/products" className="nav-link" style={navbar ? { color: "black" } : { color: "white" }} onClick={handleLinkClick}>
                   Products
-                </a>
+                </Link>
               </li>
               <li className="nav-item dropdown">
-                <a
-                  className="nav-link dropdown-toggle"
-                  href="#"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                  style={navbar ? { color: "black" } : { color: "white" }}
-                >
+                <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style={navbar ? { color: "black" } : { color: "white" }}>
                   Categories
                 </a>
                 <ul className="dropdown-menu">
                   <li>
-                    <a className="dropdown-item" href="/products">
+                    <Link href="/products" className="dropdown-item" onClick={handleLinkClick}>
                       Shirts
-                    </a>
+                    </Link>
                   </li>
                   <li>
                     <hr className="dropdown-divider" />
                   </li>
                   <li>
-                    <a className="dropdown-item" href="/products">
+                    <Link href="/products" className="dropdown-item" onClick={handleLinkClick}>
                       Pants
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </li>
               <li className="nav-item">
-                <a
-                  className="nav-link"
-                  href="/about"
-                  style={navbar ? { color: "black" } : { color: "white" }}
-                >
+                <Link href="/about" className="nav-link" style={navbar ? { color: "black" } : { color: "white" }} onClick={handleLinkClick}>
                   About
-                </a>
+                </Link>
               </li>
             </ul>
             <form className="d-flex form-inline my-2 my-lg-0">
-              <input
-                className="form-control mr-sm-2 me-2"
-                type="search"
-                placeholder="Search"
-                aria-label="Search"
-              />
-              <button
-                className="btn btn-outline-success my-2 my-sm-0"
-                type="submit"
-              >
+              <input className="form-control mr-sm-2 me-2" type="search" placeholder="Search" aria-label="Search" />
+              <button className="btn btn-outline-success my-2 my-sm-0" type="submit">
                 Search
               </button>
             </form>

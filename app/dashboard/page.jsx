@@ -98,7 +98,7 @@ const AddClothProductForm = () => {
     e.preventDefault();
     console.log('Product added:', product);
     try {
-      let res = await fetch("https://lp19nf4c-3000.inc1.devtunnels.ms/api/products", {
+      let res = await fetch("http://localhost:3000/api/products", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
