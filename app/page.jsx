@@ -16,7 +16,6 @@ export default function Home() {
       if (products.length === 0) { // Only fetch if no products are in context
         const data = await fetchProducts();
         return data
-        // setTotalPages(data.totalPages);
       }
     };
 
@@ -25,12 +24,14 @@ export default function Home() {
         if (res && res.status == 200) {
           setProducts(res.products);
           setLoading(false);
+        }else{
+          setLoading(false)
         }
       })
       .catch((error) => {
         console.error("Error fetching data", error);
         setLoading(false);
-      });;
+      });
     } catch (error) {
       console.error("Error fetching data", error);
         setLoading(false)
@@ -42,7 +43,7 @@ export default function Home() {
     <>
       <div className="nav-bg vw-100 vh-100"></div>
 
-      <div className="d-flex w-75 m-auto flex-wrap my-4">
+      <div className={`d-flex m-auto flex-wrap my-4 ${styles.cWidth}`}>
         {loading? 
           <div className="d-flex justify-content-center align-items-center w-100" style={{height:"80px"}}>
           <div className="spinner-border text-primary me-2" role="status">

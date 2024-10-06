@@ -6,7 +6,6 @@ export const ProductContext = createContext();
 
 export const ProductProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
-  console.log('products in context ', products)
 
   return (
     <ProductContext.Provider value={{ products, setProducts }}>

@@ -1,12 +1,16 @@
 "use client"; // Ensure this is a client-side component
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation"; // Correct import
+import { ProductContext } from "../app/context";
+import { fetchProducts } from '../utils/FetchProducts';
 
 const Navbar = () => {
   const [navbar, setNavbar] = useState(false);
   const [isNavOpen, setIsNavOpen] = useState(false);
+  const [searchInput, setSearchInput] = useState('');
+  const { products, setProducts } = useContext(ProductContext);
   const router = useRouter();
 
   const handleLinkClick = () => {
@@ -20,6 +24,17 @@ const Navbar = () => {
       setNavbar(false);
     }
   };
+
+  const handleSearch = (e) => {
+    console.log('search****')
+    fetchProducts({ search: searchInput }).then(res => {
+      if (res.status == 200) {
+        setProducts(res.products)
+      }
+    }).catch(err => {
+      console.log(err)
+    })
+  }
 
   useEffect(() => {
     const handleRouteChange = () => {
@@ -113,12 +128,12 @@ const Navbar = () => {
                 </Link>
               </li>
             </ul>
-            <form className="d-flex form-inline my-2 my-lg-0">
-              <input className="form-control mr-sm-2 me-2" type="search" placeholder="Search" aria-label="Search" />
-              <button className="btn btn-outline-success my-2 my-sm-0" type="submit">
+            <div className="d-flex form-inline my-2 my-lg-0">
+              <input className="form-control mr-sm-2 me-2" name="search" type="search" placeholder="Search" aria-label="Search" onChange={e => setSearchInput(e.target.value)} />
+              <button className={`btn btn-outline-success my-2 my-sm-0`} onClick={handleSearch} type="button">
                 Search
               </button>
-            </form>
+            </div>
           </div>
         </div>
       </div>

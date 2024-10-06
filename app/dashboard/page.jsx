@@ -1,8 +1,12 @@
 "use client"
-import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useEffect, useState, useContext } from "react";
+import { ProductContext } from "../context";
+import { fetchProducts } from '../../utils/FetchProducts';
 
 const AddClothProductForm = () => {
+  const { products, setProducts } = useContext(ProductContext);
+  const [loading, setLoading] = useState(false);
   const [product, setProduct] = useState({
     name: '',
     sizes: [],
@@ -13,6 +17,23 @@ const AddClothProductForm = () => {
     stock: '',
     images: [] // This will store the base64 strings
   });
+  const [processing, setProcessing] = useState(false);
+
+  useEffect(() => {
+    setLoading(true)
+    fetchProducts().then(res => {
+      if (res && res.status == 200) {
+        setProducts(res.products);
+        setLoading(false);
+      } else {
+        setLoading(false)
+        console.log('Product already exist!')
+      }
+    }).catch(err => {
+      setLoading(false)
+      console.log(err)
+    })
+  }, [])
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,7 +73,7 @@ const AddClothProductForm = () => {
       return { ...prevState, sizes: newSizes };
     });
   };
-  
+
 
   const handleColorChange = (color) => {
     setProduct((prevState) => {
@@ -96,6 +117,7 @@ const AddClothProductForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setProcessing(true)
     console.log('Product added:', product);
     try {
       let res = await fetch("http://localhost:3000/api/products", {
@@ -104,11 +126,21 @@ const AddClothProductForm = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(product)
-      });
-
-      let allPosts = await res.json();
-      console.log('allPosts', allPosts);
+      }).then(() => {
+        setProcessing(false)
+        setProduct({
+          name: '',
+          sizes: [],
+          price: '',
+          description: '',
+          category: '',
+          colors: [],
+          stock: '',
+          images: [] // This will store the base64 strings
+        })
+      })
     } catch (error) {
+      setProcessing(false)
       console.error('Error fetching data', error);
     }
   };
@@ -116,8 +148,8 @@ const AddClothProductForm = () => {
   const colors = ['Red', 'Blue', 'Green', 'Yellow', 'Black', 'White', 'Purple', 'Pink', 'Orange'];
 
   return (
-    <div className="container mt-5">
-      <h2 className="mb-4 text-success">Add Cloth Product</h2>
+    <div className="container my-5 py-4">
+      <h2 className="mb-4 text-success">Add Product</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-floating mb-3">
           <input
@@ -246,9 +278,55 @@ const AddClothProductForm = () => {
           <label htmlFor="description" className="text-black">Description</label>
         </div>
         <button type="submit" className="btn btn-success btn-block">
+          <span className={processing ? "spinner-border spinner-border-sm" : "d-none"} role="status" aria-hidden="true" ></span>
           Add Product
         </button>
       </form>
+      <hr />
+      <h2 className="mb-4 text-success">Product Management</h2>
+      {
+        loading ? <div className="d-flex justify-content-center align-items-center w-100" style={{ height: "80px" }}>
+          <div className="spinner-border text-primary me-2" role="status">
+          </div>
+          <h5 className="m-0">Fetching products...</h5>
+        </div> :
+        (products && products.length > 0 ? 
+          <table class="table" style={{ minWidth: '500px', overflow: 'auto' }}>
+            <thead>
+              <tr>
+                <th scope="col">Sr No</th>
+                <th scope="col">Product Name</th>
+                <th scope="col">Price</th>
+                <th scope="col">Category</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {products.map((product, index) => (
+                <tr key={index}>
+                  <th scope="row">{index + 1}</th>
+                  <td>{product.name}</td>
+                  <td>{product.price}</td>
+                  <td>{product.category}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table> :
+           <div className="container d-flex flex-column justify-content-center align-items-center">
+           <div className="text-center">
+             <h1 className="display-4">No Products Found</h1>
+             <p className="lead">
+               We couldn't find any products matching your search.
+             </p>
+             <a href="/products" className="btn btn-secondary">
+               Browse All Products
+             </a>
+           </div>
+         </div>
+        )
+          
+      }
+
     </div>
   );
 };

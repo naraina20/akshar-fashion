@@ -1,6 +1,6 @@
 "use client";
 import ProductCard from "@/components/ProductCard";
-import React from "react";
+import styles from "../page.module.css";
 import { useEffect, useState, useContext } from "react";
 import { ProductContext } from "../context";
 import Link from "next/link";
@@ -13,10 +13,8 @@ const page = () => {
 
   useEffect(() => {
     const loadProducts = async () => {
-      if (products && products.length === 0) {
-        // Only fetch if no products are in context
+      if (products.length === 0) {
         const data = await fetchProducts(currentPage);
-        // setTotalPages(data.totalPages);
         return data;
       }
     };
@@ -26,6 +24,8 @@ const page = () => {
         if (res && res.status == 200) {
           setProducts(res.products);
           setLoading(false);
+        }else{
+          setLoading(false)
         }
       })
       .catch((error) => {
@@ -34,11 +34,11 @@ const page = () => {
       });
   }, [products, currentPage]);
   return (
-    <div className="d-flex flex-wrap my-5 mx-2 mx-md-3">
+    <div className="d-flex flex-wrap my-5 pt-4 mx-2 mx-md-3" style={{ minHeight: "100vh" }}>
       {loading ? (
         <div
           className="d-flex justify-content-center align-items-center w-100"
-          style={{ height: "80px" }}
+          
         >
           <div className="spinner-border text-primary me-2" role="status"></div>
           <h5 className="m-0">Fetching products...</h5>
