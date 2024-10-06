@@ -5,11 +5,11 @@ import ProductCard from "@/components/ProductCard";
 import { useEffect, useState, useContext } from "react";
 import { ProductContext } from "./context";
 import Link from "next/link";
-import { fetchProducts } from '../utils/fetchProducts';
+import { fetchProducts } from '../utils/FetchProducts';
 
 export default function Home() {
   const { products, setProducts } = useContext(ProductContext);
-  const [loading, setLoading] = useState(true); // Loading state
+  const [loading, setLoading] = useState(true); // Loading statex
 
   useEffect(() => {
     const loadProducts = async () => {
