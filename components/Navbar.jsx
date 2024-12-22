@@ -62,7 +62,7 @@ const Navbar = () => {
     >
       <div className="container m-auto">
         <Link href="/" className="navbar-brand" style={navbar ? { color: "black" } : { color: "white" }}>
-          test2
+          Akshar Fashion
         </Link>
         <button
           className={
