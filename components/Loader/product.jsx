@@ -5,7 +5,7 @@ const ProductLoader = () => {
         {Array(8) // Adjust the number of skeleton cards
           .fill(0)
           .map((_, index) => (
-            <div className="col-12 col-sm-6 col-md-4 col-lg-3" key={index}>
+            <div className="col-6 col-sm-6 col-md-4 col-lg-3" key={index}>
               <div className="card p-3">
                 <div className="placeholder-glow">
                   {/* Skeleton Image */}
