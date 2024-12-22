@@ -2,7 +2,7 @@ export const fetchProducts = async (param) => {
   let page = param && param.page
   let limit = param && param.limit
   let search = param && param.search
-  const url = `http://localhost:3000/api/products?page=${page?page:1}&limit=${limit?limit:10}&search=${search?search:''}`
+  const url = `/api/products?page=${page?page:1}&limit=${limit?limit:10}&search=${search?search:''}`
   try {
     const res = await fetch(url);
     const data = await res.json();
