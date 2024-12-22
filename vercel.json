@@ -1,7 +1,0 @@
-{
-    "ignoredBuildStep": {
-      "source": "dev-nryn",
-      "error": "Deployments from the dev branch are disabled."
-    }
-  }
-  
