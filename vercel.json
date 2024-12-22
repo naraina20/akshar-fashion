@@ -1,0 +1,7 @@
+{
+    "ignoredBuildStep": {
+      "source": "dev",
+      "error": "Deployments from the dev branch are disabled."
+    }
+  }
+  
