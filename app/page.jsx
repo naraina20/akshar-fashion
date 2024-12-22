@@ -6,6 +6,7 @@ import { useEffect, useState, useContext } from "react";
 import { ProductContext } from "./context";
 import Link from "next/link";
 import { fetchProducts } from '../utils/FetchProducts';
+import ProductLoader from "@/components/Loader/product";
 
 export default function Home() {
   const { products, setProducts } = useContext(ProductContext);
@@ -45,11 +46,7 @@ export default function Home() {
 
       <div className={`d-flex m-auto flex-wrap my-4 ${styles.cWidth}`}>
         {loading? 
-          <div className="d-flex justify-content-center align-items-center w-100" style={{height:"80px"}}>
-          <div className="spinner-border text-primary me-2" role="status">
-          </div>
-          <h5 className="m-0">Fetching products...</h5>
-        </div>
+          <ProductLoader/>
         : products && products.length > 0 ? (
           products.map((product) => (
             <Link

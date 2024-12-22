@@ -5,6 +5,7 @@ import { ProductContext } from "../../context";
 import { fetchProducts } from '../../../utils/FetchProducts';
 import styles from '../../page.module.css'
 import Image from 'next/image'
+import ProductLoader from "@/components/Loader/product";
 
 const page = ({ params }) => {
   // const router = useRouter()
@@ -103,11 +104,7 @@ const page = ({ params }) => {
 
   return (
     <>
-      {loading ? <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
-        <div className="spinner-border text-primary me-2" role="status">
-        </div>
-        <h5 className="m-0">Fetching products...</h5>
-      </div> :
+      {loading ? <ProductLoader/> :
         currentProduct && Object.keys(currentProduct).length > 0 ? (
           <div className="p-5 px-2 my-3 w-100">
             <div className="d-flex flex-column flex-sm-row mb-2 h-75">
