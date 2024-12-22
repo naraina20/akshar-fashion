@@ -352,11 +352,12 @@ const page = ({ params }) => {
             <div className="my-3">
               <h4 className="text-center">People also viewed</h4>
               <div className="d-flex flex-wrap mx-2 mx-md-3">
-                {products.map((product) => (
+                {products.map((product,i) => (
                   <a
                     className="text-dark text-decoration-none p-1 my-3 p-md-3 col-6 col-sm-4 col-md-3 overflow-hidden"
                     href={`/products/${product._id}`}
                     style={{ height: "400px" }}
+                    key={product._id}
                   >
                     <ProductCard product={product} />
                   </a>
