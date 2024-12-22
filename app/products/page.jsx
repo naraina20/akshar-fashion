@@ -5,6 +5,7 @@ import { useEffect, useState, useContext } from "react";
 import { ProductContext } from "../context";
 import Link from "next/link";
 import { fetchProducts } from "../../utils/FetchProducts";
+import ProductLoader from "@/components/Loader/product";
 
 const page = () => {
   const { products, setProducts } = useContext(ProductContext);
@@ -35,15 +36,7 @@ const page = () => {
   }, [products, currentPage]);
   return (
     <div className="d-flex flex-wrap my-5 pt-4 mx-2 mx-md-3" style={{ minHeight: "100vh" }}>
-      {loading ? (
-        <div
-          className="d-flex justify-content-center align-items-center w-100"
-          
-        >
-          <div className="spinner-border text-primary me-2" role="status"></div>
-          <h5 className="m-0">Fetching products...</h5>
-        </div>
-      ) : products && products.length > 0 ? (
+      {loading ? (<ProductLoader/>) : products && products.length > 0 ? (
         products.map((product) => (
           <Link
             key={product._id}
