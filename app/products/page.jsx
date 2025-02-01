@@ -32,7 +32,7 @@ const page = () => {
         console.error("Error fetching data", error);
         setLoading(false);
       });
-  }, [products, currentPage]);
+  }, [currentPage]);
   return (
     <div className="d-flex flex-wrap my-5 pt-4 mx-2 mx-md-3" style={{ minHeight: "100vh" }}>
       {loading ? (

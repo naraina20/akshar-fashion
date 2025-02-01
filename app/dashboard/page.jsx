@@ -36,7 +36,11 @@ const AddClothProductForm = () => {
   }, [])
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    let { name, value } = e.target;
+    if(name == 'stock'||name=='price'){
+      value = Number(value)
+    }
+    console.log('name vlaue ', name,typeof(value))
     setProduct((prevState) => ({
       ...prevState,
       [name]: value
@@ -128,16 +132,16 @@ const AddClothProductForm = () => {
         body: JSON.stringify(product)
       }).then(() => {
         setProcessing(false)
-        setProduct({
-          name: '',
-          sizes: [],
-          price: '',
-          description: '',
-          category: '',
-          colors: [],
-          stock: '',
-          images: [] // This will store the base64 strings
-        })
+        // setProduct({
+        //   name: '',
+        //   sizes: [],
+        //   price: '',
+        //   description: '',
+        //   category: '',
+        //   colors: [],
+        //   stock: '',
+        //   images: [] // This will store the base64 strings
+        // })
       })
     } catch (error) {
       setProcessing(false)
@@ -291,7 +295,7 @@ const AddClothProductForm = () => {
           <h5 className="m-0">Fetching products...</h5>
         </div> :
         (products && products.length > 0 ? 
-          <table class="table" style={{ minWidth: '500px', overflow: 'auto' }}>
+          <table className="table" style={{ minWidth: '500px', overflow: 'auto' }}>
             <thead>
               <tr>
                 <th scope="col">Sr No</th>
