@@ -33,15 +33,12 @@ const page = ({ params }) => {
           setLoading(false);
         } else {
           setLoading(false)
-          console.log('Product already exist!')
         }
       })
         .catch((error) => {
-          console.error("Error fetching data", error);
           setLoading(false);
         });;
     } catch (error) {
-      console.error("Error fetching data", error);
       setLoading(false)
     }
 
@@ -49,7 +46,6 @@ const page = ({ params }) => {
 
 
   // Log currentProduct inside the component's render cycle
-  // console.log("currentProduct ===>> ", currentProduct);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -69,31 +65,29 @@ const page = ({ params }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Handle form submission logic here
-    console.log("Form data submitted:", formData);
     try {
       const data = { ...formData, product_id: productId };
-      console.log("product id ate aave k ni ", productId, data);
       let res = await fetch("http://localhost:3000/api/reviews", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
-      }).then(()=>{
+      }).then(() => {
         setFormData({
           name: "",
           location: "",
           rating: 0,
           review: "",
         })
-        fetchProducts().then(data=>{
-          if(data.status==200){
+        fetchProducts().then(data => {
+          if (data.status == 200) {
             setProducts(data.products);
-          }else{
+          } else {
             alert("Something went wrong!")
           }
         });
-      }).catch(err=>{
+      }).catch(err => {
         throw err
       });
     } catch (error) {
@@ -104,7 +98,7 @@ const page = ({ params }) => {
 
   return (
     <>
-      {loading ? <ProductLoader/> :
+      {loading ? <ProductLoader /> :
         currentProduct && Object.keys(currentProduct).length > 0 ? (
           <div className="p-5 px-2 my-3 w-100">
             <div className="d-flex flex-column flex-sm-row mb-2 h-75">
@@ -136,31 +130,32 @@ const page = ({ params }) => {
                     ></button>
                   </div>
                   <div className="carousel-inner h-100">
-                    <div className="carousel-item active h-100">
-                      <img
-                        src="/assets/images/choro.jpg"
-                        className="d-block w-100 responsive object-fit-contain"
-                        style={{ height: "100%" }}
-                        alt="..."
-                      />
-                    </div>
-                    <div className="carousel-item h-100">
-                      <img
-                        src="/assets/images/product.jpg"
-                        className="d-block w-100 responsive object-fit-contain"
-                        alt="..."
-                        style={{ height: "100%" }}
-                      />
-                    </div>
-                    <div className="carousel-item h-100">
-                      <img
-                        src="/assets/images/navImage.jpeg"
-                        className="d-block w-100 responsive object-fit-contain"
-                        alt="..."
-                        style={{ height: "100%" }}
-                      />
-                    </div>
+                    {currentProduct.images && currentProduct.images.length > 0 ? (
+                      currentProduct.images.map((image, index) => (
+                        <div
+                          className={`carousel-item h-100 ${index === 0 ? 'active' : ''}`}
+                          key={image}
+                        >
+                          <img
+                            src={image}
+                            className="d-block w-100 responsive object-fit-contain"
+                            style={{ height: "100%" }}
+                            alt={currentProduct.name}
+                          />
+                        </div>
+                      ))
+                    ) : (
+                      <div className="carousel-item active h-100">
+                        <img
+                          src="/assets/images/product.jpg"
+                          className="d-block w-100 responsive object-fit-contain"
+                          alt="Sample product"
+                          style={{ height: "100%" }}
+                        />
+                      </div>
+                    )}
                   </div>
+
                   <button
                     className="carousel-control-prev"
                     type="button"
@@ -320,36 +315,36 @@ const page = ({ params }) => {
                   </button>
                 </form>
                 <div className="d-flex overflow-auto w-100">
-                {currentProduct &&
-                  currentProduct.ratings.length > 0 &&
-                  currentProduct.ratings.map((rating) => (
-                    <div className={`me-2 ${styles.cReviewCard}`}>
-                      <div className="p-3 rounded-3 border">
-                        <div className="d-flex justify-content-between">
-                        <h4 className="d-inline">{rating.name}</h4>
-                        <div className="d-flex align-items-center">
-                        <span className="text-end"><b style={{fontSize:'23px'}}>{rating.rating}</b></span>
-                        <img
-                          src="/assets/images/star.jpg"
-                          className=""
-                          alt="Star"
-                          width="25"
-                        />
+                  {currentProduct &&
+                    currentProduct.ratings.length > 0 &&
+                    currentProduct.ratings.map((rating) => (
+                      <div className={`me-2 ${styles.cReviewCard}`}>
+                        <div className="p-3 rounded-3 border">
+                          <div className="d-flex justify-content-between">
+                            <h4 className="d-inline">{rating.name}</h4>
+                            <div className="d-flex align-items-center">
+                              <span className="text-end"><b style={{ fontSize: '23px' }}>{rating.rating}</b></span>
+                              <img
+                                src="/assets/images/star.jpg"
+                                className=""
+                                alt="Star"
+                                width="25"
+                              />
+                            </div>
+                          </div>
+                          <p className="">{rating.location}</p>
+                          <hr />
+                          <b>{rating.review}</b>
                         </div>
-                        </div>
-                        <p className="">{rating.location}</p>
-                        <hr />
-                        <b>{rating.review}</b>
                       </div>
-                    </div>
-                  ))}
-              </div>
+                    ))}
+                </div>
               </div>
             </div>
             <div className="my-3">
               <h4 className="text-center">People also viewed</h4>
               <div className="d-flex flex-wrap mx-2 mx-md-3">
-                {products.map((product,i) => (
+                {products.map((product, i) => (
                   <a
                     className="text-dark text-decoration-none p-1 my-3 p-md-3 col-6 col-sm-4 col-md-3 overflow-hidden"
                     href={`/products/${product._id}`}
