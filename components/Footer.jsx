@@ -11,12 +11,10 @@ const Navbar = () => {
       setNavbar(false);
     }
 
-    // console.log(window.scrollY)
   };
 
   function show() {
     let element = document.getElementById("navbarSupportedContent");
-    console.log(element, "mera element");
     if (element.classList.contains("show")) {
       setNavbar(true);
     } else {

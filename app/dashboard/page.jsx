@@ -27,11 +27,9 @@ const AddClothProductForm = () => {
         setLoading(false);
       } else {
         setLoading(false)
-        console.log('Product already exist!')
       }
     }).catch(err => {
       setLoading(false)
-      console.log(err)
     })
   }, [])
 
@@ -104,7 +102,6 @@ const AddClothProductForm = () => {
         reader.readAsDataURL(file);
       });
     })).then((base64Strings) => {
-      console.log('Base64 encoded files:', base64Strings);
       // Update the state with the base64Strings array
       setProduct((prevState) => ({
         ...prevState,
@@ -118,7 +115,6 @@ const AddClothProductForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setProcessing(true)
-    console.log('Product added:', product);
     try {
       let res = await fetch("http://localhost:3000/api/products", {
         method: "POST",

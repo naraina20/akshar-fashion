@@ -26,13 +26,12 @@ const Navbar = () => {
   };
 
   const handleSearch = (e) => {
-    console.log('search****')
     fetchProducts({ search: searchInput }).then(res => {
       if (res.status == 200) {
         setProducts(res.products)
       }
     }).catch(err => {
-      console.log(err)
+      throw err
     })
   }
 

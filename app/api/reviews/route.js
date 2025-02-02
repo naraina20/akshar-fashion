@@ -24,14 +24,12 @@ export async function POST(req) {
 
 
     const currentProduct = await collection.findOne({ _id: new ObjectId(product_id) })
-    console.log('current product ', currentProduct.ratings.length)
     let avgRat = 0;
     if (currentProduct.ratings.length > 0) {
       avgRat = (Number(currentProduct.avgRating) + Number(rating)) / 2
     } else {
       avgRat = rating
     }
-    console.log('avg rating ', avgRat)
     // Perform the update operation to add the rating to the product's ratings array
     const result = await collection.updateOne(
       { _id: new ObjectId(product_id) },    // Filter by the document's _id
