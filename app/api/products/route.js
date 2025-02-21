@@ -15,7 +15,6 @@ export async function POST(req) {
     const collection = db.collection('products');
 
     const result = await collection.insertOne({...bodyObject, ratings : [], avgRating : 3});
-    console.log('insertion ==>> ', result)
 
     return NextResponse.json({
       message: 'Product added successfully',
@@ -121,7 +120,6 @@ export async function DELETE(req){
 
     return NextResponse.json({ message: "Product deleted successfully" }, { status: 200 });
   }catch(err){
-    console.log('error in delete product ', err)
     return NextResponse.json({ error: "Error in delete product" }, { status: 500 });
   }
 }

@@ -45,10 +45,8 @@ const AddClothProductForm = () => {
       setLoading(true)
       if (products.length === 0) {
         loadProducts().then((res) => {
-          console.log('===> ', res)
           if (res.status == 200) {
             setProducts(res.products);
-            console.log(res.products)
             setLoading(false);
           } else {
             setLoading(false)
@@ -66,7 +64,7 @@ const AddClothProductForm = () => {
       setLoading(false)
       toast.error(error.message);
     }
-  }, [])
+  }, [products])
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -203,7 +201,6 @@ const AddClothProductForm = () => {
       const modalInstance = Modal.getInstance(modalElement) || new Modal(modalElement);
       const modalBackdrop = document.querySelector(".modal-backdrop");
       modalInstance.hide();
-      console.log('modalbackdrop ', modalBackdrop)
       if (modalBackdrop) {
         modalBackdrop.remove();
       }
