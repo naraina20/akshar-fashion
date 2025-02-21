@@ -195,7 +195,7 @@ const page = ({ params }) => {
                   <h4 className="text-secondary">{currentProduct.name}</h4>
                   <h2>&#x20B9;{currentProduct.price}</h2>
                   <div className="my-3">
-                    <span className="bg-success text-white rounded-3 p-2">{currentProduct.avgRating}</span>
+                    <span className="bg-success text-white rounded-3 p-2">{currentProduct.avgRating} <span style={{fontSize : '18px'}}>&#9733;</span></span>
                     <span className="ms-2">{currentProduct.ratings.length} Reviews</span>
                   </div>
                 </div>

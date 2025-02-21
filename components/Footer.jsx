@@ -77,7 +77,7 @@ const Navbar = () => {
     <hr className="bg-light"/>
 
     <div className="text-center">
-      <p className="mb-0">&copy; 2024 Your eCommerce Site. All rights reserved.</p>
+      <p className="mb-0">&copy; 2024 My E-Commerce Site. All rights reserved.</p>
     </div>
   </div>
 </footer>

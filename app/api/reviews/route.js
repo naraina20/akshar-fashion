@@ -26,7 +26,7 @@ export async function POST(req) {
     const currentProduct = await collection.findOne({ _id: new ObjectId(product_id) })
     let avgRat = 0;
     if (currentProduct.ratings.length > 0) {
-      avgRat = (Number(currentProduct.avgRating) + Number(rating)) / 2
+      avgRat = Math.round((Number(currentProduct.avgRating) + Number(rating)) / 2);
     } else {
       avgRat = rating
     }
