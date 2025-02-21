@@ -7,6 +7,8 @@ import { ProductProvider } from "./context";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import React, { useState, useEffect } from "react";
+import { ToastContainer,Bounce  } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,10 +24,16 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         <ProductProvider>
+          <ToastContainer
+            hideProgressBar={true}
+            newestOnTop={true}
+            pauseOnHover
+            transition={Bounce}
+          />
           <Navbar />
           {children}
           <BootstrapClient />
-          <Footer/>
+          <Footer />
         </ProductProvider>
       </body>
     </html>
