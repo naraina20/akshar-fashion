@@ -9,8 +9,8 @@ const ProductCard = ({product}) => {
    <h6 className="card-title mb-2 text-secondary">{product.name}</h6>
    <h6 className='mb-3'>&#x20B9;{product.price}</h6>
    <div>
-   <span className="bg-success text-white rounded-3 p-2 me-1">3.5</span>
-   <span className='text-secondary'>20 Reviews</span>
+   <span className="bg-success text-white rounded-3 p-2 me-1">{product.avgRating} <span style={{fontSize : '18px'}}>&#9733;</span></span>
+   <span className='text-secondary'>{product.ratings.length} Reviews</span>
    </div>
   </div>
 </div>
