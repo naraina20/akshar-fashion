@@ -6,6 +6,7 @@ import { ProductContext } from "../context";
 import Link from "next/link";
 import { fetchProducts } from "../../utils/FetchProducts";
 import ProductLoader from "@/components/Loader/product";
+import { toast } from 'react-toastify';
 
 const page = () => {
   const { products, setProducts } = useContext(ProductContext);
@@ -20,19 +21,29 @@ const page = () => {
       }
     };
 
-    loadProducts()
-      .then((res) => {
-        if (res && res.status == 200) {
+    
+    try {
+      if (products.length === 0) {
+      loadProducts().then((res) => {
+        if (res.status == 200) {
           setProducts(res.products);
           setLoading(false);
         }else{
           setLoading(false)
+          toast.error(res.statusText || "Something went wrong")
         }
       })
       .catch((error) => {
-        console.error("Error fetching data", error);
         setLoading(false);
+        toast.error(error.message);
       });
+    }else{
+      setLoading(false)
+    }
+    } catch (error) {
+        setLoading(false)
+        toast.error(error.message);
+    }
   }, [products, currentPage]);
   return (
     <div className="d-flex flex-wrap my-5 pt-4 mx-2 mx-md-3" style={{ minHeight: "100vh" }}>

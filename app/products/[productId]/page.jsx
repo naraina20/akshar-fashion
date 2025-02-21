@@ -6,43 +6,46 @@ import { fetchProducts } from '../../../utils/FetchProducts';
 import styles from '../../page.module.css'
 import Image from 'next/image'
 import ProductLoader from "@/components/Loader/product";
+import { toast } from 'react-toastify';
 
 const page = ({ params }) => {
   // const router = useRouter()
   let { productId } = params;
   const { products, setProducts } = useContext(ProductContext);
   const [loading, setLoading] = useState(true); // Loading state
-  console.log("products ==> ", products);
 
   const currentProduct = products.find((e) => e._id === productId);
-  console.log('current product ', currentProduct)
 
   useEffect(() => {
     const loadProducts = async () => {
-      if (products.length === 0) { // Only fetch if no products are in context
         const data = await fetchProducts();
         return data
-        // setTotalPages(data.totalPages);
-      }
     };
 
     try {
+      if (products.length === 0) {
       loadProducts().then((res) => {
-        if (res && res.status == 200) {
+        if (res.status == 200) {
           setProducts(res.products);
           setLoading(false);
-        } else {
+        }else{
           setLoading(false)
+          toast.error(res.statusText || "Something went wrong")
         }
       })
-        .catch((error) => {
-          setLoading(false);
-        });;
-    } catch (error) {
+      .catch((error) => {
+        setLoading(false);
+        toast.error(error.message);
+      });
+    }else{
       setLoading(false)
     }
+    } catch (error) {
+        setLoading(false)
+        toast.error(error.message);
+    }
 
-  }, []); // Ensure these dependencies are included
+  }, [products]); // Ensure these dependencies are included
 
 
   // Log currentProduct inside the component's render cycle
@@ -73,26 +76,31 @@ const page = ({ params }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
-      }).then(() => {
-        setFormData({
-          name: "",
-          location: "",
-          rating: 0,
-          review: "",
-        })
-        fetchProducts().then(data => {
-          if (data.status == 200) {
-            setProducts(data.products);
-          } else {
-            alert("Something went wrong!")
-          }
-        });
+      }).then((data) => {
+        if(data.status == 200){
+          setFormData({
+            name: "",
+            location: "",
+            rating: 0,
+            review: "",
+          })
+          toast.success("Review successfully submitted!")
+          fetchProducts().then(data => {
+            if (data.status == 200) {
+              setProducts(data.products);
+            } else {
+              toast.error(data.statusText || "Something went wrong")
+            }
+          });
+        }else{
+          toast.error(data.statusText || "Something went wrong")
+        }
+        
       }).catch(err => {
-        throw err
+        toast.error(err.message)
       });
     } catch (error) {
-      console.error("Error fetching data", error);
-      alert(error.message)
+      toast.error(err.message)
     }
   };
 
@@ -216,16 +224,16 @@ const page = ({ params }) => {
                     {currentProduct &&
                       currentProduct.colors &&
                       currentProduct.colors.length > 0 ? (
-                      currentProduct.sizes.map((color, index) => (
+                      currentProduct.colors.map((color, index) => (
                         <span
                           key={index}
-                          className={"bg-success rounded-3 p-3 me-1 mb-1"}
+                          className={`rounded-3 border p-3 me-1 mb-1 `}
+                          style={{backgroundColor : color}}
                         ></span>
                       ))
                     ) : (
                       <span>No colours available</span>
                     )}
-                    <span className="bg-success rounded-3 p-3 me-1 mb-1"></span>
                   </div>
                 </div>
               </div>
@@ -235,15 +243,11 @@ const page = ({ params }) => {
               <div className="col-sm-12 col-md-6 border rounded-3 mb-2 p-3">
                 <h4>Product details</h4>
                 <p>Name : {currentProduct.name}</p>
-                <p>fabric : Mera Shirt</p>
-                <p>Sleeves length : Mera Shirt</p>
-                <p>Pattern : Mera Shirt</p>
+                <p>Fabric : {currentProduct.fabric ? currentProduct.fabric : 'None'}</p>
+                <p>Sleeves length : {currentProduct.sleeves ? currentProduct.sleeves : 'None'}</p>
+                <p>Pattern : {currentProduct.Pattern ? currentProduct.Pattern : 'None'}</p>
                 <p>Sizes : {currentProduct.sizes.join(", ")}</p>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente
-                  voluptate dicta laborum quas ut accusantium deserunt repellat eum
-                  maxime dolores!
-                </p>
+                <p>Description : {currentProduct.description ? currentProduct.description : 'None'}</p>
               </div>
               <div className="col-sm-12 col-md-6 ps-md-4">
                 <h4 className="text-center">Reviews & Rattings</h4>
@@ -317,8 +321,8 @@ const page = ({ params }) => {
                 <div className="d-flex overflow-auto w-100">
                   {currentProduct &&
                     currentProduct.ratings.length > 0 &&
-                    currentProduct.ratings.map((rating) => (
-                      <div className={`me-2 ${styles.cReviewCard}`}>
+                    currentProduct.ratings.map((rating,index) => (
+                      <div className={`me-2 ${styles.cReviewCard}`} key={index}>
                         <div className="p-3 rounded-3 border">
                           <div className="d-flex justify-content-between">
                             <h4 className="d-inline">{rating.name}</h4>
