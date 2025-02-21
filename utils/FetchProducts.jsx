@@ -8,7 +8,6 @@ export const fetchProducts = async (param) => {
     const data = await res.json();
     return data; // Assuming your API returns an object with products and totalPages
   } catch (error) {
-    console.error("Error fetching products", error);
-    return { products: [], totalPages: 0 };
+    throw Error("Products not found!")
   }
 };

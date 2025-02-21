@@ -7,38 +7,43 @@ import { ProductContext } from "./context";
 import Link from "next/link";
 import { fetchProducts } from '../utils/FetchProducts';
 import ProductLoader from "@/components/Loader/product";
+import { toast } from 'react-toastify';
 
 export default function Home() {
   const { products, setProducts } = useContext(ProductContext);
   const [loading, setLoading] = useState(true); // Loading statex
+  
 
   useEffect(() => {
     const loadProducts = async () => {
-      if (products.length === 0) { // Only fetch if no products are in context
         const data = await fetchProducts();
         return data
-      }
     };
 
     try {
+      if (products.length === 0) {
       loadProducts().then((res) => {
-        if (res && res.status == 200) {
+        if (res.status == 200) {
           setProducts(res.products);
           setLoading(false);
         }else{
           setLoading(false)
+          toast.error(res.statusText || "Something went wrong")
         }
       })
       .catch((error) => {
-        console.error("Error fetching data", error);
         setLoading(false);
+        toast.error(error.message);
       });
+    }else{
+      setLoading(false)
+    }
     } catch (error) {
-      console.error("Error fetching data", error);
         setLoading(false)
+        toast.error(error.message);
     }
     
-  }, [products, setProducts]);
+  }, [products]);
 
   return (
     <>
