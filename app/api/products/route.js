@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import clientPromise from '../../../lib/mongodb';
 import { ObjectId } from 'mongodb';
+import { prefetchDNS } from 'react-dom';
 
 export async function POST(req) {
   try {
@@ -14,6 +15,7 @@ export async function POST(req) {
     const collection = db.collection('products');
 
     const result = await collection.insertOne({...bodyObject, ratings : [], avgRating : 3});
+    console.log('insertion ==>> ', result)
 
     return NextResponse.json({
       message: 'Product added successfully',
@@ -22,9 +24,8 @@ export async function POST(req) {
   } catch (error) {
     console.error('Error adding product:', error);
     return NextResponse.json({
-      message: 'Error adding product',
-      error: error.message,
-    }, { status: 500 });
+      error: 'Error in create new product',
+    },{status : 500});
   }
 }
 
@@ -92,11 +93,36 @@ export async function GET(req) {
     console.error('Error fetching products:', error);
     return NextResponse.json(
       {
-        message: 'Error in fetching products',
-        error: error.message,
+        error: 'Error in fetching products',
       },
       { status: 500 }
     );
+  }
+}
+
+export async function DELETE(req){
+  try{
+  const { searchParams } = new URL(req.url);
+    const productId = searchParams.get("id"); // Get the product ID from query params
+
+    const client = await clientPromise;
+    const db = client.db('akshar_fashion');
+    const collection = db.collection('products');
+
+    if (!productId) {
+      return NextResponse.json({ error: "Product ID is required" }, { status: 400 });
+    }
+
+    const deletedProduct = await collection.deleteOne({ _id: new ObjectId(productId) });
+
+    if (!deletedProduct) {
+      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ message: "Product deleted successfully" }, { status: 200 });
+  }catch(err){
+    console.log('error in delete product ', err)
+    return NextResponse.json({ error: "Error in delete product" }, { status: 500 });
   }
 }
 
