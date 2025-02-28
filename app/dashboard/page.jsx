@@ -23,8 +23,10 @@ const AddClothProductForm = () => {
     images: [] // This will store the base64 strings
   });
   const [processing, setProcessing] = useState(false);
-  const deleteModal = document.getElementById("deleteProduct");
-  const createModal = document.getElementById("addEditProduct");
+  const deleteModal = '';
+  // const deleteModal = document.getElementById("deleteProduct");
+  const createModal = '';
+  // const createModal = document.getElementById("addEditProduct");
 
   useEffect(() => {
     if (deleteModal || createModal) {
