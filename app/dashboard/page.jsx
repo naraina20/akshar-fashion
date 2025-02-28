@@ -39,7 +39,7 @@ const AddClothProductForm = () => {
     const loadProducts = async () => {
       const data = await fetchProducts();
       return data
-    };
+    }; 
 
     try {
       setLoading(true)
