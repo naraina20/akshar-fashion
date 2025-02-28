@@ -1,10 +1,10 @@
 "use client"
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { fetchProducts } from '../../utils/FetchProducts';
 import { useEffect, useState, useContext } from "react";
 import { ProductContext } from "../context";
 import { toast } from 'react-toastify';
 import { MdDeleteOutline } from "react-icons/md";
-import { fetchProducts } from '../../utils/FetchProducts';
 import { FaRegEdit } from "react-icons/fa";
 import { Modal } from "bootstrap";
 
