@@ -196,16 +196,16 @@ const AddClothProductForm = () => {
   };
 
   const closeModal = (modalID) => {
-    const modalElement = document.getElementById(modalID);
-    if (modalElement) {
-      const modalInstance = Modal.getInstance(modalElement) || new Modal(modalElement);
-      const modalBackdrop = document.querySelector(".modal-backdrop");
-      modalInstance.hide();
-      if (modalBackdrop) {
-        modalBackdrop.remove();
-      }
+    // const modalElement = document.getElementById(modalID);
+    // if (modalElement) {
+    //   const modalInstance = Modal.getInstance(modalElement) || new Modal(modalElement);
+    //   const modalBackdrop = document.querySelector(".modal-backdrop");
+    //   modalInstance.hide();
+    //   if (modalBackdrop) {
+    //     modalBackdrop.remove();
+    //   }
 
-    }
+    // }
   };
 
   const deleteProduct = async (id) => {
