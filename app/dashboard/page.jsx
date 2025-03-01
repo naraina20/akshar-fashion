@@ -1,7 +1,7 @@
 "use client"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { fetchProducts } from '../../utils/FetchProducts';
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useRef } from "react";
 import { ProductContext } from "../context";
 import { toast } from 'react-toastify';
 import { MdDeleteOutline } from "react-icons/md";
@@ -24,19 +24,25 @@ const AddClothProductForm = () => {
     images: [] // This will store the base64 strings
   });
   const [processing, setProcessing] = useState(false);
-  const deleteModal = document.getElementById("deleteProduct");
-  const createModal = document.getElementById("addEditProduct");
+  // const deleteModal = document.getElementById("deleteProduct");
+  // const createModal = document.getElementById("addEditProduct");
+  // Create refs for modals
+  const deleteModalRef = useRef(null);
+  const createModalRef = useRef(null);
+  const deletionInputRef = useRef(null);
+  const nameInputRef = useRef(null);
 
   useEffect(() => {
-    if (deleteModal || createModal) {
-      deleteModal.addEventListener("shown.bs.modal", () => {
-        document.getElementById("deletion")?.focus();
-      });
-      createModal.addEventListener("shown.bs.modal", () => {
-        document.getElementById("name")?.focus();
+    if (deleteModalRef.current) {
+      deleteModalRef.current.addEventListener("shown.bs.modal", () => {
+        deletionInputRef.current.focus();
       });
     }
-
+    if (createModalRef.current) {
+      createModalRef.current.addEventListener("shown.bs.modal", () => {
+        nameInputRef.current.focus();
+      });
+    }
     const loadProducts = async () => {
       const data = await fetchProducts();
       return data
@@ -65,6 +71,19 @@ const AddClothProductForm = () => {
       setLoading(false)
       toast.error(error.message);
     }
+
+    return () => {
+      if (deleteModalRef.current) {
+        deleteModalRef.current.removeEventListener("shown.bs.modal", () => {
+          deletionInputRef.current.focus();
+        });;
+      }
+      if (createModalRef.current) {
+        createModalRef.current.removeEventListener("shown.bs.modal", () => {
+          nameInputRef.current.focus();
+        });
+      }
+    };
   }, [products])
 
   const handleChange = (e) => {
@@ -301,7 +320,7 @@ const AddClothProductForm = () => {
 
         }
         {/*Delete product modal */}
-        <div className="modal fade" id="deleteProduct" tabIndex="-1" role="dialog" aria-labelledby="deleteProductLabel" aria-hidden="true">
+        <div className="modal fade" id="deleteProduct" ref={deleteModalRef} tabIndex="-1" role="dialog" aria-labelledby="deleteProductLabel" aria-hidden="true">
           <div className="modal-dialog" role="document">
             <div className="modal-content">
               <div className="modal-header">
@@ -312,7 +331,7 @@ const AddClothProductForm = () => {
               </div>
               <div className="modal-body">
                 <p className="text-center">Are you sure you want to delete this product ?</p>
-                <input type="hidden" id="deletion" />
+                <input type="hidden" ref={deletionInputRef} id="deletion" />
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-danger" onClick={() => deleteProduct(productID)}><span className={processing ? "spinner-border spinner-border-sm" : "d-none"} role="status" aria-hidden="true" ></span>Delete</button>
@@ -323,7 +342,7 @@ const AddClothProductForm = () => {
         </div>
 
         {/*Add/Edit product modal */}
-        <div className="modal fade" id="addEditProduct" tabIndex="-1" role="dialog" aria-labelledby="deleteProductLabel" aria-hidden="true">
+        <div className="modal fade" id="addEditProduct" ref={createModalRef} tabIndex="-1" role="dialog" aria-labelledby="deleteProductLabel" aria-hidden="true">
           <div className="modal-dialog" role="document">
             <div className="modal-content">
               <form onSubmit={handleSubmit}>
@@ -338,6 +357,7 @@ const AddClothProductForm = () => {
                     <input
                       type="text"
                       className="form-control"
+                      ref={nameInputRef}
                       id="name"
                       name="name"
                       value={product.name}
