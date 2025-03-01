@@ -8,6 +8,7 @@ import { MdDeleteOutline } from "react-icons/md";
 import { FaRegEdit } from "react-icons/fa";
 import { Modal } from "bootstrap";
 
+
 const AddClothProductForm = () => {
   const { products, setProducts } = useContext(ProductContext);
   const [loading, setLoading] = useState(false);
