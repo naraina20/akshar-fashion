@@ -6,7 +6,8 @@ import { ProductContext } from "../context";
 import { toast } from 'react-toastify';
 import { MdDeleteOutline } from "react-icons/md";
 import { FaRegEdit } from "react-icons/fa";
-import { Modal } from "bootstrap";
+import { ModalComponent } from "../../components/Modalcomp";
+// import { Modal } from "bootstrap";
 
 
 const AddClothProductForm = () => {
@@ -24,25 +25,11 @@ const AddClothProductForm = () => {
     images: [] // This will store the base64 strings
   });
   const [processing, setProcessing] = useState(false);
-  // const deleteModal = document.getElementById("deleteProduct");
-  // const createModal = document.getElementById("addEditProduct");
+
   // Create refs for modals
-  const deleteModalRef = useRef(null);
-  const createModalRef = useRef(null);
-  const deletionInputRef = useRef(null);
-  const nameInputRef = useRef(null);
+  const modalCloseBtn = useRef(null);
 
   useEffect(() => {
-    if (deleteModalRef.current) {
-      deleteModalRef.current.addEventListener("shown.bs.modal", () => {
-        deletionInputRef.current.focus();
-      });
-    }
-    if (createModalRef.current) {
-      createModalRef.current.addEventListener("shown.bs.modal", () => {
-        nameInputRef.current.focus();
-      });
-    }
     const loadProducts = async () => {
       const data = await fetchProducts();
       return data
@@ -72,18 +59,6 @@ const AddClothProductForm = () => {
       toast.error(error.message);
     }
 
-    return () => {
-      if (deleteModalRef.current) {
-        deleteModalRef.current.removeEventListener("shown.bs.modal", () => {
-          deletionInputRef.current.focus();
-        });;
-      }
-      if (createModalRef.current) {
-        createModalRef.current.removeEventListener("shown.bs.modal", () => {
-          nameInputRef.current.focus();
-        });
-      }
-    };
   }, [products])
 
   const handleChange = (e) => {
@@ -179,7 +154,7 @@ const AddClothProductForm = () => {
           setProcessing(false)
           setProduct({
             name: '',
-            sizes: [],
+            sizes: [], 
             price: '',
             description: '',
             category: '',
@@ -188,7 +163,9 @@ const AddClothProductForm = () => {
             images: []
           })
           toast.success("Product added!")
-          closeModal("addEditProduct")
+          if (modalCloseBtn.current) {
+            modalCloseBtn.current.click(); // Simulate button click
+          }
           setLoading(true);
           fetchProducts().then(res => {
             if (res.status == 200) {
@@ -212,19 +189,6 @@ const AddClothProductForm = () => {
     } catch (error) {
       setProcessing(false)
       toast.error(error.message);
-    }
-  };
-
-  const closeModal = (modalID) => {
-    const modalElement = document.getElementById(modalID);
-    if (modalElement) {
-      const modalInstance = Modal.getInstance(modalElement) || new Modal(modalElement);
-      const modalBackdrop = document.querySelector(".modal-backdrop");
-      modalInstance.hide();
-      if (modalBackdrop) {
-        modalBackdrop.remove();
-      }
-
     }
   };
 
@@ -320,8 +284,7 @@ const AddClothProductForm = () => {
 
         }
         {/*Delete product modal */}
-        <div className="modal fade" id="deleteProduct" ref={deleteModalRef} tabIndex="-1" role="dialog" aria-labelledby="deleteProductLabel" aria-hidden="true">
-          <div className="modal-dialog" role="document">
+        <ModalComponent modalId="deleteProduct">
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title" id="deleteProductLabel">Delete product permanently</h5>
@@ -331,19 +294,16 @@ const AddClothProductForm = () => {
               </div>
               <div className="modal-body">
                 <p className="text-center">Are you sure you want to delete this product ?</p>
-                <input type="hidden" ref={deletionInputRef} id="deletion" />
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-danger" onClick={() => deleteProduct(productID)}><span className={processing ? "spinner-border spinner-border-sm" : "d-none"} role="status" aria-hidden="true" ></span>Delete</button>
                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
               </div>
             </div>
-          </div>
-        </div>
+        </ModalComponent>
 
         {/*Add/Edit product modal */}
-        <div className="modal fade" id="addEditProduct" ref={createModalRef} tabIndex="-1" role="dialog" aria-labelledby="deleteProductLabel" aria-hidden="true">
-          <div className="modal-dialog" role="document">
+        <ModalComponent modalId="addEditProduct">
             <div className="modal-content">
               <form onSubmit={handleSubmit}>
                 <div className="modal-header">
@@ -357,7 +317,6 @@ const AddClothProductForm = () => {
                     <input
                       type="text"
                       className="form-control"
-                      ref={nameInputRef}
                       id="name"
                       name="name"
                       value={product.name}
@@ -483,12 +442,11 @@ const AddClothProductForm = () => {
                 </div>
                 <div className="modal-footer">
                   <button type="submit" className="btn btn-primary"><span className={processing ? "spinner-border spinner-border-sm" : "d-none"} role="status" aria-hidden="true" ></span> Submit</button>
-                  <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="button" ref={modalCloseBtn} className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
               </form>
             </div>
-          </div>
-        </div>
+        </ModalComponent>
       </div>
 
     </div>
