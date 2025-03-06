@@ -70,7 +70,7 @@ const page = ({ params }) => {
     // Handle form submission logic here
     try {
       const data = { ...formData, product_id: productId };
-      let res = await fetch("http://localhost:3000/api/reviews", {
+      let res = await fetch("/api/reviews", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

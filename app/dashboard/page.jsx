@@ -149,7 +149,7 @@ const AddClothProductForm = () => {
     e.preventDefault();
     setProcessing(true)
     try {
-      let res = await fetch("http://localhost:3000/api/products", {
+      let res = await fetch("/api/products", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
