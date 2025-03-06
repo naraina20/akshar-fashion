@@ -87,7 +87,7 @@ export async function GET(req) {
         totalCount,
         totalPages: Math.ceil(totalCount / limit),
       },
-    });
+    },{status: 200});
   } catch (error) {
     console.error('Error fetching products:', error);
     return NextResponse.json(
@@ -118,7 +118,7 @@ export async function DELETE(req){
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ message: "Product deleted successfully" }, { status: 200 });
+    return NextResponse.json({ message: "Product deleted successfully",status: 200 }, { status: 200 });
   }catch(err){
     return NextResponse.json({ error: "Error in delete product" }, { status: 500 });
   }
