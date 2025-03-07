@@ -1,48 +1,52 @@
 "use client";
 import ProductCard from "@/components/ProductCard";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { ProductContext } from "../../context";
 import { fetchProducts } from '../../../utils/FetchProducts';
 import styles from '../../page.module.css'
 import Image from 'next/image'
 import ProductLoader from "@/components/Loader/product";
 import { toast } from 'react-toastify';
+import { ModalComponent } from "@/components/Modalcomp";
+
 
 const page = ({ params }) => {
   // const router = useRouter()
   let { productId } = params;
   const { products, setProducts } = useContext(ProductContext);
   const [loading, setLoading] = useState(true); // Loading state
+  const [reviewLoanding, setReviewLoanding] = useState(false)
+  const reviewModal = useRef(null)
 
   const currentProduct = products.find((e) => e._id === productId);
 
   useEffect(() => {
     const loadProducts = async () => {
-        const data = await fetchProducts();
-        return data
+      const data = await fetchProducts();
+      return data
     };
 
     try {
       if (products.length === 0) {
-      loadProducts().then((res) => {
-        if (res.status == 200) {
-          setProducts(res.products);
-          setLoading(false);
-        }else{
-          setLoading(false)
-          toast.error(res.statusText || "Something went wrong")
-        }
-      })
-      .catch((error) => {
-        setLoading(false);
-        toast.error(error.message);
-      });
-    }else{
-      setLoading(false)
-    }
-    } catch (error) {
+        loadProducts().then((res) => {
+          if (res.status == 200) {
+            setProducts(res.products);
+            setLoading(false);
+          } else {
+            setLoading(false)
+            toast.error(res.statusText || "Something went wrong")
+          }
+        })
+          .catch((error) => {
+            setLoading(false);
+            toast.error(error.message);
+          });
+      } else {
         setLoading(false)
-        toast.error(error.message);
+      }
+    } catch (error) {
+      setLoading(false)
+      toast.error(error.message);
     }
 
   }, [products]); // Ensure these dependencies are included
@@ -67,6 +71,7 @@ const page = ({ params }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setReviewLoanding(true)
     // Handle form submission logic here
     try {
       const data = { ...formData, product_id: productId };
@@ -77,25 +82,29 @@ const page = ({ params }) => {
         },
         body: JSON.stringify(data),
       }).then((data) => {
-        if(data.status == 200){
+        if (data.status == 200) {
           setFormData({
             name: "",
             location: "",
             rating: 0,
             review: "",
           })
+          if(reviewModal.current){
+            reviewModal.current.click()
+          }
           toast.success("Review successfully submitted!")
           fetchProducts().then(data => {
             if (data.status == 200) {
               setProducts(data.products);
+              setReviewLoanding(false)
             } else {
               toast.error(data.statusText || "Something went wrong")
             }
           });
-        }else{
+        } else {
           toast.error(data.statusText || "Something went wrong")
         }
-        
+
       }).catch(err => {
         toast.error(err.message)
       });
@@ -195,7 +204,7 @@ const page = ({ params }) => {
                   <h4 className="text-secondary">{currentProduct.name}</h4>
                   <h2>&#x20B9;{currentProduct.price}</h2>
                   <div className="my-3">
-                    <span className="bg-success text-white rounded-3 p-2">{currentProduct.avgRating} <span style={{fontSize : '18px'}}>&#9733;</span></span>
+                    <span className="bg-success text-white rounded-3 p-2">{currentProduct.avgRating} <span style={{ fontSize: '18px' }}>&#9733;</span></span>
                     <span className="ms-2">{currentProduct.ratings.length} Reviews</span>
                   </div>
                 </div>
@@ -228,7 +237,7 @@ const page = ({ params }) => {
                         <span
                           key={index}
                           className={`rounded-3 border p-3 me-1 mb-1 `}
-                          style={{backgroundColor : color}}
+                          style={{ backgroundColor: color }}
                         ></span>
                       ))
                     ) : (
@@ -250,78 +259,15 @@ const page = ({ params }) => {
                 <p>Description : {currentProduct.description ? currentProduct.description : 'None'}</p>
               </div>
               <div className="col-sm-12 col-md-6 ps-md-4">
-                <h4 className="text-center">Reviews & Rattings</h4>
-                <form onSubmit={handleSubmit} className="my-3">
-                  <div className="form-floating mb-3">
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      placeholder="Name"
-                      required
-                    />
-                    <label htmlFor="name">Name</label>
-                  </div>
-
-                  <div className="form-floating mb-3">
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="location"
-                      name="location"
-                      value={formData.location}
-                      onChange={handleChange}
-                      placeholder="City"
-                      required
-                    />
-                    <label htmlFor="location">City</label>
-                  </div>
-
-                  <div className="form-floating mb-3">
-                    <select
-                      className="form-select"
-                      id="rating"
-                      name="rating"
-                      value={formData.rating}
-                      onChange={handleChange}
-                      required
-                    >
-                      <option value="" defaultValue disabled>
-                        Select rating
-                      </option>
-                      <option value="1">1 Star</option>
-                      <option value="2">2 Stars</option>
-                      <option value="3">3 Stars</option>
-                      <option value="4">4 Stars</option>
-                      <option value="5">5 Stars</option>
-                    </select>
-                    <label htmlFor="rating">Star Rating</label>
-                  </div>
-
-                  <div className="form-floating mb-3">
-                    <textarea
-                      className="form-control"
-                      id="review"
-                      name="review"
-                      value={formData.review}
-                      onChange={handleChange}
-                      placeholder="Leave a review here"
-                      style={{ height: "100px" }}
-                    />
-                    <label htmlFor="review">Review</label>
-                  </div>
-
-                  <button type="submit" className="btn btn-primary">
-                    Submit Review
-                  </button>
-                </form>
+                <div className="d-flex justify-content-between align-items-baseline my-2">
+                  <h4>Reviews & Rattings <span className={reviewLoanding ? 'spinner-border spinner-border-sm text-black' : 'd-none'}></span></h4>
+                  <button type="submit" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addReview">
+                    Add Review </button>
+                </div>
                 <div className="d-flex overflow-auto w-100">
                   {currentProduct &&
                     currentProduct.ratings.length > 0 &&
-                    currentProduct.ratings.map((rating,index) => (
+                    currentProduct.ratings.map((rating, index) => (
                       <div className={`me-2 ${styles.cReviewCard}`} key={index}>
                         <div className="p-3 rounded-3 border">
                           <div className="d-flex justify-content-between">
@@ -360,6 +306,85 @@ const page = ({ params }) => {
                 ))}
               </div>
             </div>
+            <ModalComponent modalId="addReview" >
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Add Review</h5>
+                  <button type="button" className="close" ref={reviewModal} data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div className="modal-body">
+                  <form onSubmit={handleSubmit} className="my-3">
+                    <div className="form-floating mb-3">
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        placeholder="Name"
+                        required
+                      />
+                      <label htmlFor="name">Name</label>
+                    </div>
+
+                    <div className="form-floating mb-3">
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="location"
+                        name="location"
+                        value={formData.location}
+                        onChange={handleChange}
+                        placeholder="City"
+                        required
+                      />
+                      <label htmlFor="location">City</label>
+                    </div>
+
+                    <div className="form-floating mb-3">
+                      <select
+                        className="form-select"
+                        id="rating"
+                        name="rating"
+                        value={formData.rating}
+                        onChange={handleChange}
+                        required
+                      >
+                        <option value="" defaultValue disabled>
+                          Select rating
+                        </option>
+                        <option value="1">1 Star</option>
+                        <option value="2">2 Stars</option>
+                        <option value="3">3 Stars</option>
+                        <option value="4">4 Stars</option>
+                        <option value="5">5 Stars</option>
+                      </select>
+                      <label htmlFor="rating">Star Rating</label>
+                    </div>
+
+                    <div className="form-floating mb-3">
+                      <textarea
+                        className="form-control"
+                        id="review"
+                        name="review"
+                        value={formData.review}
+                        onChange={handleChange}
+                        placeholder="Leave a review here"
+                        style={{ height: "100px" }}
+                      />
+                      <label htmlFor="review">Review</label>
+                    </div>
+
+                    <button type="submit" className="btn btn-primary" disabled={reviewLoanding}>
+                      Submit <span className={reviewLoanding ? 'spinner-border spinner-border-sm' : 'd-none'}></span>
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </ModalComponent>
           </div>
         ) : (
           <div className="container d-flex flex-column justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
